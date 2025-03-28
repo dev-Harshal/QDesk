@@ -60,6 +60,9 @@
                                             <a href="{% url "detail-question-paper-view" question_paper.id %}" class="btn btn-primary">
                                                 <i class="bi bi-eye"></i>
                                             </a>
+                                            <a href="{% url "delete-question-paper-view" question_paper.id %}" class="btn btn-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}

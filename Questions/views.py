@@ -413,5 +413,11 @@ def update_questions_list_view(request, division_id, question_paper_id):
     )
     return render(request, 'question_papers/questions/update_questions_list.html', context={'division': division, 'question_paper': question_paper, 'question_sets': question_sets})
    
-
+def delete_question_paper(request, question_paper_id):
+    question_paper = QuestionPaper.objects.get(id=question_paper_id)
+    id = question_paper.question_paper_subject.id
+    paper = question_paper
+    question_paper.delete()
+    messages.success(request, f'{paper} deleted successfully.')
+    return redirect('question-papers-list-view' ,subject_id=id)
 
