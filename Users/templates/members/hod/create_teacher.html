@@ -1,0 +1,113 @@
+{% extends "members/hod/base_site.html" %}
+
+{% block title %} Create Teacher {% endblock title %}
+
+{% block main %}
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Create Teacher</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url "hod-index-view" %}">Home</a></li>
+                    <li class="breadcrumb-item active">Create Teacher</li>
+                </ol>
+            </nav>
+        </div>
+
+        <section class="section dashboard">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border border-dark shadow">
+
+                        <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                            Create {{request.user.profile.department}} Teacher Profile
+                        </div>
+
+                        <div class="card-body pt-4">
+                            
+                            {% include "components/alert.html" %}
+
+                            <form id="createTeacherForm" class="row g-3" method="post">
+                                {% csrf_token %}
+
+                                <div class="col-6">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input id="firstName" type="text" class="form-control" name="first_name" required>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input id="lastName" type="text" class="form-control" name="last_name" required>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input id="email" type="email" class="form-control" name="email" required>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                                    <input id="phoneNumber" type="text" class="form-control" name="phone_number" maxlength="10" pattern="\d{10}" title="Please enter exactly 10 digits" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input id="username" type="text" class="form-control" name="username" required>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input id="password" type="password" class="form-control" name="password" required>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <input id="confirmPassword" type="password" class="form-control" name="confirm_password" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="experience" class="form-label">Experience</label>
+                                    <input id="experience" type="number" class="form-control" name="experience" min="0.5" max="99.5" step="0.5" title="Please enter valid experince." required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="subjectCodes" class="form-label">Subjects (hold ctrl to select multiple)</label>
+                                    <select id="subjectCodes" class="form-select" name="subject_codes" multiple>
+                                        {% for subject in subjects %}
+                                            <option value="{{subject.subject_code}}">{{subject}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="col-6">
+                                    <label for="designation" class="form-label">Designation</label>
+                                    <select id="designation" class="form-select" name="designation" required>
+                                        <option value="">choose designation</option>
+                                        <option value="Professor">Professor</option>
+                                        <option value="Ast.Professor">Ast.Professor</option>
+                                        <option value="Staff">Staff</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="department" class="form-label">Department</label>
+                                    <input type="text" class="form-control" name="department" value="{{request.user.profile.department}}" readonly>
+                                </div>
+                                
+                                <div class=" col-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Create Teacher</button>
+                                </div>
+                            </form>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+{% endblock main %}

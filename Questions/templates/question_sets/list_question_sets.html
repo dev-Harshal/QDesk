@@ -1,0 +1,97 @@
+{% extends "members/teacher/base_site.html" %}
+
+{% block title %} Question Set's List {% endblock title %}
+
+{% block main %}
+
+	<main id="main" class="main">
+
+		<div class="pagetitle">
+			<h1>Question Set's List</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{% url "teacher-index-view" %}">Home</a></li>
+					<li class="breadcrumb-item active">Question Set's List</li>
+				</ol>
+			</nav>
+		</div>
+
+		<section class="section dashboard">
+			<div class="row justify-content-center">
+				<div class="col-lg-12">
+
+					<div class="card border border-dark shadow">
+
+                        <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                            Questions Set's List
+                        </div>
+
+						<div class="card-body pt-4">
+
+							{% include "components/alert.html" %}
+							
+							<table class="table datatable">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Subject Code</th>
+										<th>Subject</th>
+										<th>Scheme</th>
+										<th>Department</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+
+								<tbody>
+								{% for subject in subjects %}
+									<tr>
+										<td>{{forloop.counter}}</td>
+										<td>{{subject.subject_code}}</td>
+										<td>{{subject.subject_name}}</td>
+										<td>{{subject.scheme}}</td>
+										<td>{{subject.department}}</td>
+										<td>
+											<a href="{% url "update-questions-view" subject.id subject.min_unit %}" class="btn btn-secondary">
+												<i class="bi bi-pencil-square"></i>
+											</a>
+
+											<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#verticalycentered{{subject.id}}">
+												<i class="bi bi-trash"></i>
+											</button>
+
+											<div class="modal fade" id="verticalycentered{{subject.id}}" tabindex="-1">
+												<div class="modal-dialog modal-dialog-centered">
+
+													<div class="modal-content">
+														<div class="modal-header bg-primary text-light fw-bold">
+															<h5 class="modal-title">Delete Question Set Confirmation</h5>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body text-center">
+															Confirm you want to delete all Question Sets ? <br>
+															<strong>{{subject}}</strong>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+															<a href="{% url "delete-question-sets-view" subject.id %}" class="btn btn-danger">Delete</a>
+														</div>
+													</div>
+													
+												</div>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+	</main>
+
+{% endblock main %}

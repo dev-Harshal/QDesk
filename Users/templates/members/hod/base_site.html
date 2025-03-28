@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="" class="logo">
+                <span class="d-none d-lg-block text-dark">
+                    <i class="bi bi-question-square-fill"></i>
+                    QUESTIONS DESK
+                </span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div>
+
+        <nav class="header-nav ms-auto">
+            <ul>
+                <li class="nav-item dropdown pe-3">
+
+                    <a class="nav-link nav-profile pe-0" href="#" data-bs-toggle="dropdown">
+                        <span class="dropdown-toggle ps-2 fs-5">{{request.user.first_name}} {{request.user.last_name.0}}</span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+
+                        <li class="dropdown-header">
+                            <h6>{{request.user.first_name}} {{request.user.last_name}}</h6>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{% url "hod-profile-view" %}">
+                                <i class="bi bi-person"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{% url "logout-view" %}">
+                                <i class="bi bi-power"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item text-center mb-3">
+                <span class="badge bg-primary w-100 fs-6 p-2">HOD PANEL</span>
+            </li>
+    
+            <li class="nav-item mb-3">
+                <a class="nav-link " href="{% url "hod-index-view" %}">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+    
+            <li class="nav-heading">SUBJECTS</li>
+    
+            <li class="nav-item mb-3">
+                <a class="nav-link" href="{% url "hod-create-subject-view" %}">
+                    <i class="bi bi-bookmark-plus-fill"></i>
+                    <span>Create Subject</span>
+                </a>
+            </li>
+    
+            <li class="nav-item mb-3">
+                <a class="nav-link" href="{% url "hod-list-subjects-view" %}">
+                    <i class="bi bi-journal-bookmark"></i>
+                    <span>List Subject</span>
+                </a>
+            </li>
+    
+            <li class="nav-heading">USERS</li>
+    
+            <li class="nav-item mb-3">
+                <a class="nav-link" href="{% url "hod-create-teacher-view" %}">
+                    <i class="bi bi-person-workspace"></i>
+                    <span>Create Teacher</span>
+                </a>
+            </li>
+    
+            <li class="nav-item mb-3">
+                <a class="nav-link" href="{% url "hod-list-users-view" 'Teacher' %}">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>List Teacher</span>
+                </a>
+            </li>
+    
+            <li class="nav-item">
+                <a class="nav-link" href="{% url "hod-list-users-view" 'Student' %}">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>List Student</span>
+                </a>
+            </li>
+    
+        </ul>
+
+    </aside>
+
+    {% block main %}{% endblock main %}
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+{% endblock content %}

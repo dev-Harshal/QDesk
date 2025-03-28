@@ -1,0 +1,81 @@
+{% extends "members/teacher/base_site.html" %}
+
+{% block title %}  Question Paper's List {% endblock title %}
+
+{% block main %}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Question Paper's List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url "teacher-index-view" %}">Home</a></li>
+                <li class="breadcrumb-item active">Question Paper's List</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12">
+
+                <div class="card border border-dark shadow">
+
+                    <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                        Subject Question Papers
+                    </div>
+
+
+                    <div class="card-body pt-4">
+                        {% include "components/alert.html" %}
+
+                        <table class="table datatable">
+
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Subject Code</th>
+                                    <th>Subject Name</th>
+                                    <th>Scheme</th>
+                                    <th>Department</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for subject in subjects %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{subject.subject_code}}</td>
+                                    <td>{{subject.subject_name}}</td>
+                                    <td>{{subject.scheme}}</td>
+                                    <td>{{subject.department}}</td>
+                                    <td>
+                                        <a href="{% url "question-papers-list-view" subject.id %}" class="btn btn-primary">
+                                            <i class="bi bi-card-heading"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+{% endblock main %}

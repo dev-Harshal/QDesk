@@ -1,0 +1,96 @@
+{% extends "members/teacher/base_site.html" %}
+
+{% block title %} Question's List {% endblock title %}
+
+{% block main %}
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Question's List</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url "teacher-index-view" %}">Home</a></li>
+                    <li class="breadcrumb-item active">Question's List</li>
+                </ol>
+            </nav>
+        </div>
+
+        <a href="{% url "update-questions-view" question_set.subject.id question_set.unit %}" class="btn btn-secondary mb-3">
+            Back
+        </a>
+        
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+        
+                    <div class="card">
+
+                        <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                            {{question_set}} Questions List
+                        </div>
+
+                        <div class="card-body">
+
+                            <h5 class="card-title pb-2 d-flex justify-content-between">
+                                {{question_set.subject}}
+                                <span>{{question_set.subject.semester}}</span>
+                            </h5>
+
+                            <div class="mb-3">
+                                <div class="row justify-content-between">
+                                    <div class="col">
+                                        <span class="fw-semibold">Unit No ({{question_set.unit}})</span>
+                                    </div>
+                                    <div class="col-10">
+                                        <p class="card-text">: {{question_set.unit_title}}</p>
+                                    </div>
+                                </div>
+
+                                <div class="row justify-content-between">
+                                    <div class="col">
+                                        <span class="fw-semibold">CO ({{question_set.co}})</span>
+                                    </div>
+                                    <div class="col-10">
+                                        <p class="card-text">: {{question_set.co_title}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table datatable">
+
+                                <thead>
+                                    <tr>
+                                        <th>Unit</th>
+                                        <th>Co</th>
+                                        <th>Question Title</th>
+                                        <th>Mark</th>
+                                        <th>Levels</th>
+                                    </tr>
+                                </thead>    
+        
+                                <tbody>
+                                    {% for question in questions %}
+                                    <tr>
+                                        <td>{{question_set.unit}}</td>
+                                        <td>{{question_set.co}}</td>
+                                        <td>{{question.question_title}}</td>
+                                        <td>{{question.question_mark}}</td>
+                                        <td>{{question.question_levels}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+        
+                        </div>
+                        
+                    </div>
+        
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+{% endblock main %}

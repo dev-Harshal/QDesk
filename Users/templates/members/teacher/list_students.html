@@ -1,0 +1,88 @@
+{% extends "members/teacher/base_site.html" %}
+
+{% block title %} Student's List {% endblock title %}
+
+{% block main %}
+
+	<main id="main" class="main">
+
+		<div class="pagetitle">
+			<h1>Student's List</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="{% url "hod-index-view" %}">Home</a></li>
+					<li class="breadcrumb-item active">Student's List</li>
+				</ol>
+			</nav>
+		</div>
+
+		<section class="section dashboard">
+			<div class="row justify-content-center">
+				<div class="col-lg-12">
+					<div class="card border border-dark shadow">
+                        <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                            Student Profiles List
+                        </div>
+
+						<div class="card-body pt-4">
+				
+							{% include "components/alert.html" %}
+
+							<table class="table datatable">
+								<thead>
+									<tr>
+										<th>#ID</th>
+										<th><b>F</b>ull Name</th>
+										<th>Email</th>
+										<th>Institute</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+
+								<tbody>
+                                    {% for user in users %}
+                                        <tr>
+                                            <td>{{user.id}}</td>
+                                            <td>{{user.first_name}} {{user.last_name}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td>{{user.institute}}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#verticalycentered{{user.id}}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                                    
+                                                <div class="modal fade" id="verticalycentered{{user.id}}" tabindex="-1">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header bg-primary text-light fw-bold">
+                                                                <h5 class="modal-title">Delete Student Confirmation</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+
+                                                            <div class="modal-body text-center">
+                                                                Are sure you want to delete <br> 
+                                                                <strong>{{user.first_name}} {{user.last_name}}</strong> ?
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <a href="{% url "members-delete-user-view" user.id %}" class="btn btn-danger">Delete</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+{% endblock main %}

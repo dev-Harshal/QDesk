@@ -1,0 +1,96 @@
+{% extends "members/teacher/base_site.html" %}
+
+{% block title %} Update Question Set {% endblock title %}
+
+{% block main %}
+    <main id="main" class="main">
+        
+        <div class="pagetitle">
+            <h1>Update Question Set</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url "teacher-index-view" %}">Home</a></li>
+                    <li class="breadcrumb-item active">Update Question Set</li>
+                </ol>
+            </nav>
+        </div>
+
+        <section class="section dashboard">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+
+                    <div class="card border border-dark shadow">
+
+                        <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                            Update {{question_set}} Details
+                        </div>
+                        
+                        <div class="card-body pt-4">
+
+                            {% include "components/alert.html" %}
+
+                            <form id="updateQuestionSetForm" class="row g-3" method="post">
+                                {% csrf_token %}
+
+                                <div class="col-12">
+                                    <label for="questionSetId" class="form-label">ID</label>
+                                    <input id="questionSetId" type="text" class="form-control" name="question_set_id" value="{{question_set.id}}" disabled>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="subjectCode" class="form-label">Subject</label>
+                                    <select id="subjectCode" class="form-select" name="subject_code">
+                                        {% for subject in subjects %}
+                                        <option {% if question_set.subject == subject %} selected {% endif %} value="{{subject.subject_code}}">{{subject}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-2">
+                                    <label for="unit" class="form-label">Unit No.</label>
+                                    <select id="unit" class="form-select" name="unit" required>
+                                        <option {% if question_set.unit == 1 %} selected {% endif %} value="1">1</option>
+                                        <option {% if question_set.unit == 2 %} selected {% endif %} value="2">2</option>
+                                        <option {% if question_set.unit == 3 %} selected {% endif %} value="3">3</option>
+                                        <option {% if question_set.unit == 4 %} selected {% endif %} value="4">4</option>
+                                        <option {% if question_set.unit == 5 %} selected {% endif %} value="5">5</option>
+                                        <option {% if question_set.unit == 6 %} selected {% endif %} value="6">6</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-9">
+                                    <label for="unitTitle" class="form-label">Unit Title</label>
+                                    <input id="unitTitle" type="text" class="form-control" name="unit_title" value="{{question_set.unit_title}}" required>
+                                </div>
+
+                                <div class="col-2">
+                                    <label for="co" class="form-label">Co.</label>
+                                    <select id="co" class="form-select" name="co" required>
+                                        <option {% if question_set.co == 1 %} selected {% endif %} value="1">1</option>
+                                        <option {% if question_set.co == 2 %} selected {% endif %} value="2">2</option>
+                                        <option {% if question_set.co == 3 %} selected {% endif %} value="3">3</option>
+                                        <option {% if question_set.co == 4 %} selected {% endif %} value="4">4</option>
+                                        <option {% if question_set.co == 5 %} selected {% endif %} value="5">5</option>
+                                        <option {% if question_set.co == 6 %} selected {% endif %} value="6">6</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-9">
+                                    <label for="coTitle" class="form-label">CO Title</label>
+                                    <input id="coTitle" type="text" class="form-control" name="co_title" value="{{question_set.co_title}}" required>
+                                </div>
+
+                                <div class=" col-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Save Question Set</button>
+                                    <a href="{% url "update-questions-view" question_set.subject.id question_set.unit %}" class="btn btn-secondary">Back</a>
+                                </div>
+                            </form>
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+{% endblock main %}

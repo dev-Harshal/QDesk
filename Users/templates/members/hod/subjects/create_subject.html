@@ -1,0 +1,80 @@
+{% extends "members/hod/base_site.html" %}
+
+{% block title %} Create Subject {% endblock title %}
+
+{% block main %}
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Create Subject</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url "hod-index-view" %}">Home</a></li>
+                    <li class="breadcrumb-item active">Create Subject</li>
+                </ol>
+            </nav>
+        </div>
+
+        <section class="section dashboard">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card border border-dark shadow">
+
+                        <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                            Create {{request.user.profile.department}} Subject
+                        </div>
+
+                        <div class="card-body pt-4">
+
+                            {% include "components/alert.html" %}
+
+                            <form id="createSubjectForm" class="row g-3" method="post">
+                                {% csrf_token %}
+
+                                <div class="col-12">
+                                    <label for="subjectName" class="form-label">Subject Name</label>
+                                    <input id="subjectName" type="text" class="form-control" name="subject_name" required>
+                                </div>
+
+                                <div class="col-3">
+                                    <label for="subjectCode" class="form-label">Subject Code</label>
+                                    <input id="subjectCode" type="text" class="form-control" name="subject_code" required>
+                                </div>
+
+                                <div class="col-3">
+                                    <label for="scheme" class="form-label">Scheme</label>
+                                    <select id="scheme" class="form-select" name="scheme">
+                                        <option value="K">K</option>
+                                        <option value="I">I</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="semester" class="form-label">Semester</label>
+                                    <select id="semester" class="form-select" name="semester">
+                                        <option value="Semester 1">Semester 1</option>
+                                        <option value="Semester 2">Semester 2</option>
+                                        <option value="Semester 3">Semester 3</option>
+                                        <option value="Semester 4">Semester 4</option>
+                                        <option value="Semester 5">Semester 5</option>
+                                        <option value="Semester 6">Semester 6</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Create Subject</button>
+                                    <a href="{% url "hod-index-view" %}" class="btn btn-secondary">Close</a>
+                                </div>
+                            </form>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+{% endblock main %}

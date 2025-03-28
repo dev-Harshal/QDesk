@@ -1,0 +1,110 @@
+{% extends "members/teacher/base_site.html" %}
+
+{% block title %} Add Questions  {% endblock title %}
+
+{% block main %}
+
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Select Questions</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url "teacher-index-view" %}">Home</a></li>
+                    <li class="breadcrumb-item active">Select Questions</li>
+                </ol>
+            </nav>
+        </div>
+        
+        <section class="section dashboard">
+            <div class="row justify-content-center">
+                <div class="col-12">
+
+                    {% include "components/alert.html" %}
+            
+                    <div class="card ">
+                        <div class="card-header text-center bg-primary text-light fw-bold fs-5">
+                            Select Questions
+                        </div>
+
+                        <div class="card-body">
+
+                            <h5 class="card-title pb-2 d-flex justify-content-between">
+                                Q.{{division.division_no}} {{division.division_title}}
+                                <span class="text-dark fs-6">Marks: {{division.division_mark}}</span>
+                            </h5>
+
+                            <form id="addQuestionsForm" method="post">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="division_id" id="divisionId" value="{{division.id}}">
+                                <input type="hidden" name="question_paper_id" id="questionPaperId" value="{{question_paper.id}}">
+
+                                {% for question_set in question_sets  %}
+
+                                    {% if question_set.filtered_questions %}
+                                        <div class="mb-3 border p-2">
+                                            <div class="row justify-content-between">
+                                                <div class="col">
+                                                    <span class="fw-semibold">Unit No ({{question_set.unit}})</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p class="card-text">: {{question_set.unit_title}}</p>
+                                                </div>
+                                            </div>
+            
+                                            <div class="row justify-content-between">
+                                                <div class="col">
+                                                    <span class="fw-semibold">CO ({{question_set.co}})</span>
+                                                </div>
+                                                <div class="col-10">
+                                                    <p class="card-text">: {{question_set.co_title}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    <table class="table table-responsive mb-3">
+                                        <thead>
+                                            <tr>
+                                                <th>Select</th>
+                                                <th>No</th>
+                                                <th>Question Title</th>
+                                                <th>Marks</th>
+                                                <th colspan="2">RUA Levels</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for question in question_set.filtered_questions%} 
+                                            <tr>
+                                                <td><input type="checkbox" name="selected_question_id[]" value="{{question.id}}" class="form-check-input" style="width: 25px; height: 25px;"></td>
+                                                <td>{{forloop.counter}}</td>
+                                                <td style="width:60%;">{{question.question_title}}</td>
+                                                <td>{{question.question_mark}}</td>
+                                                <td colspan="2">{{question.question_levels}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+
+                                    </table>
+                                    
+                                {% endfor %}
+
+                                <div class=" col-12 text-center">
+                                    <button type="submit" class="btn btn-primary">Save Question(s)</button>
+                                    <a href="{% url "list-question-sets-view" %}" class="btn btn-secondary">Close</a>
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+{% endblock main %}

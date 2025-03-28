@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %} {{role}} Login {% endblock title %}
+
+{% block content %}
+    <main class="bg-secondary-subtle">
+        <div class="container">
+            <section class="section min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center">
+                            <div class="card shadow pt-4 pb-2">
+
+                                <div class="card-body">
+
+                                    <a class="fs-5 h1" href="{% url "index-view" %}">
+                                        <i class="bi bi-question-square-fill"></i>
+                                        <span>QUESTIONS DESK</span>
+                                    </a>
+
+                                    <div class="mb-3">
+                                        <h5 class="card-title text-center pb-0 mb-0 fs-4">{{role|upper}} LOGIN</h5>
+                                        <p class="card-text text-center">Enter your Username &amp; Password to Login.</p>
+                                    </div>
+
+                                    {% include "components/alert.html" %}
+
+                                    <form method="post" id="membersLoginForm" class="row g-3">
+                                        {% csrf_token %}
+        
+                                        <div class="col-12">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input id="username" type="text" class="form-control" name="username" required>
+                                        </div>
+        
+                                        <div class="col-12">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input id="password" type="password" class="form-control" name="password" required>
+                                        </div>
+
+                                        <input type="hidden" name="role" id="role" value="{{role}}">
+        
+                                        <div class="col-12 text-center">
+                                            <button type="submit" class="btn btn-primary w-50">Login</button>
+                                        </div>
+                                    </form>  
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock content %}
