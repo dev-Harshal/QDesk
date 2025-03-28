@@ -47,7 +47,7 @@ class Division(models.Model):
         if self.division_questions.all().count() == (self.division_mark / self.mark_per_question) + (self.extra_question):
             self.status = "Complete"
         else:
-            self.status = "InComplete"
+            self.status = "Incomplete"
         super().save(*args, **kwargs)
 
     class Meta:
@@ -76,8 +76,9 @@ class QuestionPaper(models.Model):
     def status_check(self ,*args, **kwargs):
         status = 'Complete'
 
-        for division in self.divisions.all():
-            if division.status == 'Incomplete':
+        print(self.divisions.all().values_list('status', flat=True),"DIV")
+        for division in self.divisions.all().values_list('status', flat=True):
+            if division == 'Incomplete':
                 status = 'Incomplete'
         
         if self.divisions.all().count() < self.question_count:
