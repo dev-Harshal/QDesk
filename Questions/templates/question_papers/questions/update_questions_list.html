@@ -28,10 +28,15 @@
                 <div class="card border border-dark shadow">
 
                     <div class="card-header text-center bg-primary text-light fw-bold fs-5">
-                        Update {{question_paper.question_paper_title}}: Q({{division.division_no}}) 
+                        Update {{question_paper.question_paper_title}} 
                     </div>
                     
-                    <div class="card-body pt-4">
+                    <div class="card-body">
+
+                        <h5 class="card-title text-dark pb-2 d-flex justify-content-between">
+                            Q({{division.division_no}}). {{division.division_title}}
+                            <span class="text-dark fs-6">(Marks :{{division.division_mark}})</span>
+                        </h5>
                         
                         <form id="updateDivisionForm" method="post" class="row justify-content-between g-3">
                             {% csrf_token %}
@@ -70,7 +75,6 @@
                                                         
                         </form>
 
-
                     </div>
 
                 </div>
@@ -82,10 +86,15 @@
                 <div class="card border border-dark shadow">
 
                     <div class="card-header text-center bg-primary text-light fw-bold fs-5">
-                        Update {{question_paper.question_paper_title}}: Q({{division.division_no}}) Question's
+                        Update {{question_paper.question_paper_title}} Question's
                     </div>
                     
-                    <div class="card-body pt-4">
+                    <div class="card-body">
+
+                        <h5 class="card-title text-dark pb-2 mb-3 d-flex justify-content-between">
+                            Q({{division.division_no}}). {{division.division_title}}
+                            <span class="text-dark fs-6">(Marks :{{division.division_mark}})</span>
+                        </h5>
                         
                         <form id="updateQuestionListForm" method="post" class="row justify-content-between g-3">
                             {% csrf_token %}
@@ -95,18 +104,34 @@
                             
                             {% for question_set in question_sets  %}
 
+                            <div class="row mb-3">
+                                <div class="row justify-content-between">
+                                    <div class="col">
+                                        <span class="fw-semibold">Unit No ({{question_set.unit}})</span>
+                                    </div>
+                                    <div class="col-10">
+                                        <p class="card-text">: {{question_set.unit_title}}</p>
+                                    </div>
+                                </div>
 
-                            <p class="card-text mb-0 pb-0">Unit {{question_set.unit}}: {{question_set.unit_title}}</p>
-                            <p class="card-text mb-0 pb-0">Co {{question_set.co}}: {{question_set.co_title}}</p>
+                                <div class="row justify-content-between">
+                                    <div class="col">
+                                        <span class="fw-semibold">CO ({{question_set.co}})</span>
+                                    </div>
+                                    <div class="col-10">
+                                        <p class="card-text">: {{question_set.co_title}}</p>
+                                    </div>
+                                </div>
+                            </div>
                             
                             <table class="table mb-3">
                                 <thead>
                                     <tr>
                                         <th>Select</th>
                                         <th>No</th>
-                                        <th>Question Title</th>
+                                        <th style="width:60%;">Question Title</th>
                                         <th>Marks</th>
-                                        <th>RUA Levels</th>
+                                        <th colspan="2">RUA Levels</th>
                                     </tr>
                                 </thead>
 
@@ -116,9 +141,9 @@
                                     <tr>
                                         <td><input {% if question in division.division_questions.all %} checked {% endif %} type="checkbox" name="selected_question_id[]" value="{{question.id}}" class="form-check-input" style="width: 25px; height: 25px;"></td>
                                         <td>{{forloop.counter}}</td>
-                                        <td>{{question.question_title}}</td>
+                                        <td style="width:60%;">{{question.question_title}}</td>
                                         <td>{{question.question_mark}}</td>
-                                        <td>{{question.question_levels}}</td>
+                                        <td colspan="2">{{question.question_levels}}</td>
                                     </tr>
                                     {% endfor %}
                                 
@@ -143,9 +168,7 @@
 
         </div>
 
-
     </section>
-
 
 </main>
 

@@ -76,16 +76,16 @@ class QuestionPaper(models.Model):
     def status_check(self ,*args, **kwargs):
         status = 'Complete'
 
-        print(self.divisions.all().values_list('status', flat=True),"DIV")
         for division in self.divisions.all().values_list('status', flat=True):
             if division == 'Incomplete':
                 status = 'Incomplete'
         
-        if self.divisions.all().count() < self.question_count:
+        if self.divisions.all().count() != self.question_count:
+            print(self.divisions.all().count(), self.question_count)
             status = 'Incomplete'
 
         divisions_marks = self.divisions.values_list('division_mark', flat=True)
-        if sum(divisions_marks) > self.question_paper_total_marks:
+        if sum(divisions_marks) != self.question_paper_total_marks:
             status = 'Incomplete'
 
         self.status = status

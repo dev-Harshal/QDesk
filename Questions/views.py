@@ -195,18 +195,19 @@ def create_question_paper_view(request):
             question_paper_type = request.POST.get('question_paper_type')
             question_paper_title = request.POST.get('question_paper_title')
             question_paper_subject = Subject.objects.get(subject_code=request.POST.get('subject_code'))
-            question_paper_total_marks = request.POST.get('question_paper_total_marks')
-            question_count = request.POST.get('question_count')
-            academic_year_start = request.POST.get('academic_year_start')
-            academic_year_end = request.POST.get('academic_year_end')
+            question_paper_total_marks = int(request.POST.get('question_paper_total_marks'))
+            question_count = int(request.POST.get('question_count'))
+            academic_year_start =int(request.POST.get('academic_year_start'))
+            academic_year_end = int(request.POST.get('academic_year_end'))
             exam_date = request.POST.get('exam_date')
             exam_hour = request.POST.get('exam_hour')
             exam_minute = request.POST.get('exam_minute')
 
-            if int(academic_year_end) - int(academic_year_start) > 1:
+            if academic_year_end - academic_year_start > 1:
                 return JsonResponse({'status':'error', 'message':f'Academic Year cannot be more than 1 Year.'})
             
             if question_paper_type != 'Assignment':
+
                 if question_paper_type == 'Unit Test':
                     if QuestionPaper.objects.filter(question_paper_type=question_paper_type, question_paper_title__iexact=question_paper_title ,question_paper_subject=question_paper_subject, academic_year_start=academic_year_start, academic_year_end=academic_year_end).exists():
                         return JsonResponse({'status':'error', 'message':f'{question_paper_subject.subject_name} {question_paper_title} paper for {academic_year_start}-{academic_year_end} already exists.'})
@@ -221,20 +222,20 @@ def create_question_paper_view(request):
                 question_paper_type = question_paper_type,
                 question_paper_title = question_paper_title,
                 question_paper_subject = question_paper_subject,
-                question_paper_total_marks = int(question_paper_total_marks),
-                question_count = int(question_count),
-                academic_year_start = int(academic_year_start),
-                academic_year_end = int(academic_year_end),
-                exam_date = exam_date if exam_date != "" else None,
-                exam_hour = int(exam_hour) if exam_hour != "" else None,
-                exam_minute = int(exam_minute) if exam_minute != "" else None
+                question_paper_total_marks = question_paper_total_marks,
+                question_count = question_count,
+                academic_year_start = academic_year_start,
+                academic_year_end = academic_year_end,
+                exam_date = exam_date if exam_date != '' else None,
+                exam_hour = int(exam_hour) if exam_hour != '' else None,
+                exam_minute = int(exam_minute) if exam_minute != '' else None
             )
 
             messages.success(request, f'Question Paper for {question_paper} created successfully.')
             return JsonResponse({'status':'success', 'success_url':f'/teacher/create/division/{question_paper.id}/'})
             
         except Exception as error:
-            return JsonResponse({'status':'error', 'message':f'Error(Contant Dev): {error}'})
+            return JsonResponse({'status':'error', 'message':f'BACKEND ERROR: {error}'})
             
     question_sets_subjects = Subject.objects.filter(
             question_sets__in=QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all())
@@ -243,41 +244,42 @@ def create_question_paper_view(request):
 
 def create_division_view(request, question_paper_id):
     question_paper = QuestionPaper.objects.get(id=question_paper_id)
+
     if request.method == 'POST':
         try:
-            division_no = request.POST.get('division_no') 
+            division_no = int(request.POST.get('division_no') )
             division_title = request.POST.get('division_title')
-            division_mark = request.POST.get('division_mark')
-            mark_per_question = request.POST.get('mark_per_question')
-            extra_question = request.POST.get('extra_question')
+            division_mark = int(request.POST.get('division_mark'))
+            mark_per_question = int(request.POST.get('mark_per_question'))
+            extra_question = int(request.POST.get('extra_question'))
 
             if question_paper.divisions.all().count() == question_paper.question_count:
                 return JsonResponse({'status':'error', 'message':f'{question_paper} contains only {question_paper.question_count} questions.'})
 
             divisons = question_paper.divisions.all().values_list('division_mark', flat=True)
-            if sum(divisons) + int(division_mark) > question_paper.question_paper_total_marks:
+
+            if sum(divisons) + division_mark > question_paper.question_paper_total_marks:
                 return JsonResponse({'status':'error', 'message':f'{question_paper} total mark limit exceeded.'})
 
             if question_paper.divisions.filter(division_no=division_no).exists():
                 return JsonResponse({'status':'error', 'message':f'Question {division_no} already exists in {question_paper}.'})
             
             division = Division.objects.create(
-                division_no = int(division_no),
+                division_no = division_no,
                 division_title = division_title,
-                division_mark = int(division_mark),
-                mark_per_question = int(mark_per_question),
-                extra_question = int(extra_question)
+                division_mark = division_mark,
+                mark_per_question = mark_per_question,
+                extra_question = extra_question
             )
 
             question_paper.divisions.add(division)
             division.status_check()
             question_paper.status_check()
-            
 
             messages.success(request, f'Question {division_no} for {question_paper} created successfully.')
             return JsonResponse({'status':'success', 'success_url':f'/teacher/add/questions/{division.id}/{question_paper.id}/'})
         except Exception as error:
-            return JsonResponse({'status':'error', 'message':f'Error(Contant Dev): {error}'})
+            return JsonResponse({'status':'error', 'message':f'BACKEND ERROR: {error}'})
     question_paper = QuestionPaper.objects.get(id=question_paper_id)
     return render(request, 'question_papers/divisions/create_division.html', context={'question_paper':question_paper})
 
@@ -337,32 +339,32 @@ def update_division_view(request, division_id, question_paper_id):
 
     if request.method == 'POST':
         try:
-            division_no = request.POST.get('division_no') 
+            division_no = int(request.POST.get('division_no'))
             division_title = request.POST.get('division_title')
-            division_mark = request.POST.get('division_mark')
-            mark_per_question = request.POST.get('mark_per_question')
-            extra_question = request.POST.get('extra_question')
+            division_mark = int(request.POST.get('division_mark'))
+            mark_per_question = int(request.POST.get('mark_per_question'))
+            extra_question = int(request.POST.get('extra_question'))
 
-            divisions = question_paper.divisions.filter(division_no=int(division_no))
+            divisions = question_paper.divisions.filter(division_no=division_no)
 
             if divisions.exists() and divisions[0] != division:
                 return JsonResponse({'status':'error', 'message':f'Question {division_no} already exists in {question_paper}.'})
 
             division_total = question_paper.divisions.all().values_list('division_mark', flat=True)
-            total = sum([int(x) for x in division_total]) - int(division.division_mark)
+            total = sum([int(x) for x in division_total]) - division.division_mark
             if total + int(division_mark) > question_paper.question_paper_total_marks:
                 return JsonResponse({'status':'error', 'message':f'{question_paper} total mark limit exceeded.'})
             
-            division.division_no = int(division_no)
+            division.division_no = division_no
             division.division_title = division_title
-            division.division_mark = int(division_mark)
-            division.extra_question = int(extra_question)
+            division.division_mark = division_mark
+            division.extra_question = extra_question
 
-            if int(mark_per_question) != division.mark_per_question:
+            if mark_per_question != division.mark_per_question:
                 division.division_questions.clear()
-            division.mark_per_question = int(mark_per_question)
-
+            division.mark_per_question = mark_per_question
             division.save()
+
             division.status_check()
             question_paper.status_check()
 
@@ -402,7 +404,6 @@ def update_questions_list_view(request, division_id, question_paper_id):
         except Exception as error:
             return JsonResponse({'status': 'error', 'message': f'BACKEND ERROR: {error}'})
 
-    # Fetch question sets based on the subject of the question paper
     question_sets = QuestionSet.objects.filter(subject=question_paper.question_paper_subject).order_by('unit')
     question_sets = question_sets.prefetch_related(
         Prefetch(
@@ -413,7 +414,7 @@ def update_questions_list_view(request, division_id, question_paper_id):
     )
     return render(request, 'question_papers/questions/update_questions_list.html', context={'division': division, 'question_paper': question_paper, 'question_sets': question_sets})
    
-def delete_question_paper(request, question_paper_id):
+def delete_question_paper_view(request, question_paper_id):
     question_paper = QuestionPaper.objects.get(id=question_paper_id)
     id = question_paper.question_paper_subject.id
     paper = question_paper

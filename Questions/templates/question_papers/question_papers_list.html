@@ -41,7 +41,7 @@
                                     <th>Total Marks</th>
                                     <th>Academic Year</th>
                                     <th>Exam Date</th>
-                                    <th>Time</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -55,7 +55,7 @@
                                         <td>{{question_paper.question_paper_total_marks}}</td>
                                         <td>{{question_paper.academic_year_start}} - {{question_paper.academic_year_end}}</td>
                                         <td>{% if question_paper.exam_date %} {{question_paper.exam_date}} {% else %} {{'-'}} {% endif %}</td>
-                                        <td>{% if question_paper.exam_hour %} {{question_paper.exam_hour}} Hour {% if question_paper.exam_minute %} {{question_paper.exam_minute}} Mins {% endif %} {% else %} {{'-'}} {% endif %}</td>
+                                        <td>{{question_paper.status}}</td>
                                         <td>
                                             <a href="{% url "detail-question-paper-view" question_paper.id %}" class="btn btn-primary">
                                                 <i class="bi bi-eye"></i>

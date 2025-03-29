@@ -19,5 +19,5 @@ urlpatterns = [
     path('update/division/<int:division_id>/<int:question_paper_id>/', update_division_view, name='update-division-view'),
     path('add/questions/<int:division_id>/<int:question_paper_id>/', add_questions_view, name='add-questions-view'),
     path('update/questions-list/<int:division_id>/<int:question_paper_id>/', update_questions_list_view, name='update-questions-list-view'),
-    path('delete/question-paper/<int:question_paper_id>/', delete_question_paper, name="delete-question-paper-view")
+    path('delete/question-paper/<int:question_paper_id>/', delete_question_paper_view, name="delete-question-paper-view")
 ]
