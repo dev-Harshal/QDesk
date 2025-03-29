@@ -161,7 +161,19 @@ def members_delete_user_view(request, user_id):
 
 
 def admin_index_view(request):
-    return render(request, 'members/admin/index.html')
+    total_users = User.objects.all().count()
+    admins = User.objects.filter(role='Admin').all().count()
+    hods = User.objects.filter(role='HOD').all().count()
+    teachers = User.objects.filter(role='Teacher').all().count()
+    students = User.objects.filter(role='Student').all().count()
+    context = {
+        'total_users':total_users,
+        'admins':admins,
+        'hods':hods,
+        'teachers':teachers,
+        'students':students,
+    }
+    return render(request, 'members/admin/index.html', context=context)
 
 def admin_profile_view(request):
     return render(request, 'members/admin/profile.html')
@@ -269,7 +281,16 @@ def admin_list_users_view(request, role):
 
 
 def hod_index_view(request):
-    return render(request, 'members/hod/index.html')
+    total_teachers = Profile.objects.filter(user__role = 'Teacher', department=request.user.profile.department).all().count()
+    total_subjects = Subject.objects.filter(department=request.user.profile.department).all().count()
+    recent_subjects = Subject.objects.filter(department=request.user.profile.department).all().reverse()
+
+    context = {
+        'total_teachers':total_teachers,
+        'total_subjects':total_subjects,
+        'recent_subjects':recent_subjects[:5],
+    }
+    return render(request, 'members/hod/index.html', context=context)
 
 def hod_profile_view(request):
     return render(request, 'members/hod/profile.html')

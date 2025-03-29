@@ -5,5 +5,92 @@
 {% block main %}
     <main id="main" class="main">
         {% include "components/alert.html" %}
+
+        <div class="pagetitle">
+            <h1>Dashboard</h1>
+        </div>
+
+        <section class="section dashboard">
+            <div class="row justify-content-between">
+
+                <div class="col-12">
+                    <div class="row">
+
+                        <div class="col-6">
+                            <div class="card info-card sales-card">      
+                                <div class="card-body">
+        
+                                    <h5 class="card-title">{{request.user.profile.department}} Teachers</h5>
+        
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>{{total_teachers}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="card info-card customers-card">      
+                                <div class="card-body">
+        
+                                    <h5 class="card-title">{{request.user.profile.department}} Subjects</h5>
+        
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>{{total_subjects}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="card">
+                    
+                                <div class="card-body pb-0">
+                                    <h5 class="card-title">Recently added subjects</h5>
+
+                                    <table class="table datatable">
+                                        <thead>
+                                            <tr>
+                                                <th>Subject Code</th>
+                                                <th>Subject Name</th>
+                                                <th>Semester</th>
+                                                <th>Scheme</th>
+                                                <th>Department</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for subject in recent_subjects %}
+                                            <tr>
+                                                <td>{{subject.subject_code}}</td>
+                                                <td>{{subject.subject_name}}</td>
+                                                <td>{{subject.semester}}</td>
+                                                <td>{{subject.scheme}}</td>
+                                                <td>{{subject.department}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+        
+                            </div>
+                        </div> 
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
     </main>
 {% endblock main %}
