@@ -5,5 +5,225 @@
 {% block main %}
     <main id="main" class="main">
         {% include "components/alert.html" %}
+
+        <div class="pagetitle">
+			<h1>Question Sets Dashboard</h1>
+		</div>
+
+        <section class="section dashboard">
+            <div class="row justify-content-between">
+
+                <div class="col-4">
+                    <div class="card info-card sales-card">      
+                        <div class="card-body">
+
+                            <h5 class="card-title">Subjects</h5>
+
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-book"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6>{{subjects}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                
+                <div class="col-4">
+                    <div class="card info-card revenue-card">      
+                        <div class="card-body">
+
+                            <h5 class="card-title">Question Sets</h5>
+
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-journals"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6>{{question_sets}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="card info-card customers-card">      
+                        <div class="card-body">
+
+                            <h5 class="card-title">Questions</h5>
+
+                            <div class="d-flex align-items-center">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-question-octagon-fill"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6>{{questions}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                
+            </div>
+
+        </section>
+
+        <div class="pagetitle">
+			<h1>Question Papers Dashboard</h1>
+		</div>
+
+        <section class="section dashboard">
+
+            <div class="row">
+                <div class="col-8">
+                    <div class="row flex-wrap">
+
+                        <div class="col-6">
+                            <div class="card info-card sales-card">      
+                                <div class="card-body">
+        
+                                    <h5 class="card-title">Question Papers</h5>
+        
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-file-earmark-medical"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>{{question_papers}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        
+                        <div class="col-6">
+                            <div class="card info-card revenue-card">      
+                                <div class="card-body">
+        
+                                    <h5 class="card-title">Complete</h5>
+        
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-bookmark-check"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>{{question_papers_complete}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="col-6">
+                            <div class="card info-card customers-card">      
+                                <div class="card-body">
+        
+                                    <h5 class="card-title">Pending</h5>
+        
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-cone-striped"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>{{question_papers_pending}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        
+                        <div class="col-6">
+                            <div class="card info-card revenue-card">      
+                                <div class="card-body">
+        
+                                    <h5 class="card-title">Total Question Papers</h5>
+        
+                                    <div class="d-flex align-items-center">
+                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-journals"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>{{total_question_papers}}</h6>
+                                            <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                    
+                                <div class="card-body pb-0">
+                                    <h5 class="card-title">Question Papers</h5>
+                        
+                                    <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+                        
+                                    <script>
+                                            document.addEventListener("DOMContentLoaded", () => {
+                                                
+                                                echarts.init(document.querySelector("#trafficChart")).setOption({
+                                                    tooltip: {
+                                                        trigger: 'item'
+                                                    },
+        
+                                                    legend: {
+                                                        top: '5%',
+                                                        left: 'center'
+                                                    },
+                                                    series: [{
+                                                        name: 'Count',
+                                                        type: 'pie',
+                                                        radius: ['40%', '70%'],
+                                                        avoidLabelOverlap: false,
+                                                    label: {
+                                                        show: false,
+                                                        position: 'center'
+                                                    },
+                                                    emphasis: {
+                                                        label: {
+                                                        show: true,
+                                                        fontSize: '18',
+                                                        fontWeight: 'bold'
+                                                        }
+                                                    },
+                                                    labelLine: {
+                                                        show: false
+                                                    },
+                                                    data: [{
+                                                        value: {{ assignment_papers }},
+                                                        name: 'Assignments'
+                                                        },
+                                                        {
+                                                        value: {{ unit_papers }},
+                                                        name: 'Unit Papers'
+                                                        },
+                                                        {
+                                                        value: {{ exam_papers }},
+                                                        name: 'Exam Papers'
+                                                        }
+                                                    ]
+                                                    }]
+                                                });
+                                            });
+                                    </script>
+                                </div>
+        
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
     </main>
 {% endblock main %}

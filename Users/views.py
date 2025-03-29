@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from Users.models import *
+from Questions.models import *
 # Create your views here.
 
 def index_view(request):
@@ -469,7 +470,34 @@ def hod_list_users_view(request, role):
 
 
 def teacher_index_view(request):
-    return render(request, 'members/teacher/index.html')
+    subjects = Subject.objects.filter(question_sets__in=QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all())).count()
+    question_sets = QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all()).all().count()
+    questions = Question.objects.filter(question_sets__in=QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all())).all().count()
+
+    total_question_papers = QuestionPaper.objects.all().count()
+    question_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all()).all().count()
+    question_papers_complete = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), status="Complete").all().count()
+    question_papers_pending = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), status="Incomplete").all().count()
+
+    assignment_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), question_paper_type="Assignment").all().count()
+    unit_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), question_paper_type="Unit").all().count()
+    exam_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), question_paper_type="Exam").all().count()
+
+
+    context = {
+        'subjects':subjects,
+        'question_sets':question_sets,
+        'questions':questions,
+        'total_question_papers':total_question_papers,
+        'question_papers':question_papers,
+        'question_papers_complete':question_papers_complete,
+        'question_papers_pending':question_papers_pending,
+        'assignment_papers':assignment_papers,
+        'unit_papers':unit_papers,
+        'exam_papers':exam_papers,
+    }
+    print(assignment_papers, unit_papers, exam_papers)
+    return render(request, 'members/teacher/index.html', context=context)
 
 def teacher_profile_view(request):
     return render(request, 'members/teacher/profile.html')
