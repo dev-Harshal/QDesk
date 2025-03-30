@@ -1,0 +1,84 @@
+{% extends "users/base_site.html" %}
+{% block title %} Question Sets {% endblock title %}
+{% block main %}
+
+<div class="pagetitle mt-3">
+    <h1>Question Set</h1>
+</div>
+
+<a href="{% url "assignments-view" subject.id %}" class="btn btn-primary">View Assignments</a>
+
+<section class="section mt-3">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow">
+
+                <div class="card-body pt-4">
+
+                    <h5 class="card-title mb-2 pb-0 d-flex justify-content-between">
+                        {{subject.subject_name}}
+                        <span>{{subject.semester}}</span>
+                    </h5>
+                    <p class="card-text d-flex justify-content-between">
+                        Scheme: {{subject.scheme}}
+                        <span>({{subject.department}})</span>
+                    </p>
+
+                    {% for question_set in question_sets %}
+
+                    <div class="row border border-dark p-2 mb-3">
+                        <div class="row mb-3">
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <span class="fw-semibold">Unit No ({{question_set.unit}})</span>
+                                </div>
+                                <div class="col-10">
+                                    <p class="card-text">: {{question_set.unit_title}}</p>
+                                </div>
+                            </div>
+    
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <span class="fw-semibold">CO ({{question_set.co}})</span>
+                                </div>
+                                <div class="col-10">
+                                    <p class="card-text">: {{question_set.co_title}}</p>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <table class="table datatable">
+    
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th style="width:60%;">Question Title</th>
+                                    <th>Question Mark</th>
+                                    <th>RUA Level</th>
+                                </tr>
+                            </thead>
+    
+                            <tbody>
+                                {% for question in question_set.questions.all %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td style="width=60%;">{{question.question_title}}</td>
+                                    <td>{{question.question_mark}}</td>
+                                    <td>{{question.question_levels}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+    
+                        </table>
+                    </div>
+
+                    {% endfor %}
+                        
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock main %}

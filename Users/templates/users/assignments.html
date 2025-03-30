@@ -1,0 +1,66 @@
+{% extends "users/base_site.html" %}
+{% block title %} Assignments {% endblock title %}
+{% block main %}
+
+<div class="pagetitle mt-3">
+    <h1>Assignments</h1>
+</div>
+
+<a href="{% url "question-sets-view" subject.id %}" class="btn btn-primary">View Question Set</a>
+
+<section class="section mt-3">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow">
+
+                <div class="card-body pt-4">
+
+                    <h5 class="card-title mb-2 pb-0 d-flex justify-content-between">
+                        {{subject.subject_name}}
+                        <span>{{subject.semester}}</span>
+                    </h5>
+                    <p class="card-text d-flex justify-content-between">
+                        Scheme: {{subject.scheme}}
+                        <span>({{subject.department}})</span>
+                    </p>
+                    
+                    <table class="table datatable">
+    
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Assignment Title</th>
+                                <th>Assignment Mark</th>
+                                <th>Questions</th>
+                                <th>Created Date</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for assignment in assignments %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{assignment.question_paper_title}}</td>
+                                <td>{{assignment.question_paper_total_marks}}</td>
+                                <td>{{assignment.divisions.count}}</td>
+                                <td>{{assignment.created_date}}</td>
+                                <td>
+                                    <a href="{% url "assignment-view" assignment.id %}" class="btn btn-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+  
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock main %}

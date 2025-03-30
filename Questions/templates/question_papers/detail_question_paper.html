@@ -31,10 +31,15 @@
                         <h5 class="card-title text-center text-dark pt-2">{{question_paper.question_paper_title}} <span class="fw-normal fs-6 text-dark">(Academic Year {{question_paper.academic_year_start}} - {{question_paper.academic_year_end}})</span></h5>
                         <hr>
 
-                        <div>
+                        <div class="d-flex justify-content-between align-items-center">
                             <span class="badge mb-3 p-2 text-bg-{% if question_paper.status == 'Complete' %}success{% else %}warning{% endif %}">
                                 {{question_paper.status|upper}}
                             </span>
+                        
+                            <a href="{% url "assignment_pdf" question_paper.id %}" class="btn btn-secondary btn-sm {% if question_paper.status != 'Complete' %} disabled {% endif %}" >
+                                Download
+                            </a>
+
                         </div>
 
                         {% for division in question_paper.divisions.all %}       

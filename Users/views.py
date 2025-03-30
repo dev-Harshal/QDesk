@@ -4,10 +4,76 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from Users.models import *
 from Questions.models import *
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from urllib.parse import unquote
+from django.db.models import Q 
 # Create your views here.
 
+from urllib.parse import unquote
+from django.db.models import Q  # To help with complex queries
+
 def index_view(request):
-    return render(request, 'users/index.html')
+    # Get the filter values from the GET request
+    department = request.GET.get('department', '')
+    scheme = request.GET.get('scheme', '')
+    semester = request.GET.get('semester', '')
+
+    # Debugging: Check the data being received
+    print(f"GET data: {request.GET}")
+
+    # Start with all subjects
+    subjects = Subject.objects.all()
+
+    # Apply filters if present
+    if department:
+        department = unquote(department).strip()  # Decode and remove extra spaces
+        print(f"Filtering by department: {department}")  # Debug
+        subjects = Subject.objects.filter(department__iexact=department).all()  # Case-insensitive match
+
+    if scheme:
+        print(f"Filtering by scheme: {scheme}")  # Debug
+        subjects = Subject.objects.filter(scheme__iexact=scheme).all()
+
+    if semester:
+        semester = unquote(semester).strip()
+        print(f"Filtering by semester: {semester}")  # Debug
+        subjects = Subject.objects.filter(semester__iexact=semester).all()
+
+    # Debugging: See what subjects are being retrieved
+    print(f"Filtered subjects: {subjects}")
+
+    # The rest of your logic remains the same
+    question_set_subjects = Subject.objects.filter(question_sets__in=QuestionSet.objects.all()).distinct()
+    question_paper_subjects = Subject.objects.filter(question_papers__in=QuestionPaper.objects.all().reverse()).distinct()
+
+    context = {
+        'question_set_subjects': question_set_subjects[:3],
+        'question_paper_subjects': question_paper_subjects[:3],
+        'subjects': subjects
+    }
+
+    return render(request, 'users/index.html', context=context)
+
+def question_sets_view(request, subject_id):
+    subject = Subject.objects.prefetch_related(
+        'question_sets__questions' 
+    ).get(id=subject_id)
+    question_sets = subject.question_sets.all()
+    for qs in question_sets:
+        qs.sorted_questions = qs.questions.all().order_by('question_mark')
+    return render(request, 'users/question_sets.html', context={'question_sets':question_sets, 'subject':subject})
+
+def assignments_view(request, subject_id):
+    subject = Subject.objects.get(id=subject_id)
+    assignments = QuestionPaper.objects.filter(question_paper_type='Assignment', question_paper_subject=subject, status="Complete").order_by('question_paper_title')
+    return render(request, 'users/assignments.html', context={'assignments':assignments, 'subject':subject})
+
+def assignment_view(request, assignment_id):
+    assignment = QuestionPaper.objects.get(id=assignment_id)
+    institute = Profile.objects.filter(subjects=assignment.question_paper_subject).first().user.institute
+    return render(request, 'users/assignment.html', context={'assignment':assignment, 'institute':institute})
 
 def register_view(request):
     if request.method == 'POST':
@@ -83,7 +149,8 @@ def logout_view(request):
     else:
         return redirect('index-view')
         
-
+def about_us_view(request):
+    return render(request, 'users/about_us.html')
 
 def members_update_profile_view(request):
     if request.method == 'POST':
@@ -157,7 +224,6 @@ def members_delete_user_view(request, user_id):
     except Exception as error:
         messages.error(request, f'BACKEND ERROR: {error}')
         return redirect(f'{request.user.role.lower()}-index-view')
-
 
 
 def admin_index_view(request):
@@ -277,7 +343,6 @@ def admin_update_hod_view(request, user_id):
 def admin_list_users_view(request, role):
     users = User.objects.filter(role=role).all()
     return render(request, 'members/admin/list_users.html', context={'users':users, 'role':role})
-
 
 
 def hod_index_view(request):
@@ -489,7 +554,6 @@ def hod_list_users_view(request, role):
     return render(request, 'members/hod/list_users.html', context={'users':users, 'role':role})
 
 
-
 def teacher_index_view(request):
     subjects = Subject.objects.filter(question_sets__in=QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all())).count()
     question_sets = QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all()).all().count()
@@ -526,3 +590,100 @@ def teacher_profile_view(request):
 def teacher_list_students_view(request):
     users = User.objects.filter(role='Student')
     return render(request, 'members/teacher/list_students.html', context={'users':users})
+
+def assignment_pdf_view(request, pk):
+    # Create a response object
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="assignment.pdf"'
+
+    # Create a PDF object using reportlab
+    p = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    # Get the assignment object (example data fetching, replace as needed)
+    assignment = QuestionPaper.objects.get(id=pk)
+    
+    # Set fonts and styles
+    p.setFont("Helvetica-Bold", 12)
+
+    # Add the institute name and other details (center aligned)
+    p.drawCentredString(width / 2, height - 50, f"{Profile.objects.filter(subjects=assignment.question_paper_subject).first().user.institute}")
+    p.setFont("Helvetica", 10)
+    p.drawCentredString(width / 2, height - 70, f"Department of {assignment.question_paper_subject.department}")
+    p.setFont("Helvetica-Bold", 12)
+    p.drawCentredString(width / 2, height - 90, f"{assignment.question_paper_title}")
+    p.setFont("Helvetica", 10)
+    p.drawCentredString(width / 2, height - 110, f"(Academic Year {assignment.academic_year_start} - {assignment.academic_year_end})")
+
+    # Add course details on the left and marks on the right
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 140, "Course Title: ")
+    p.setFont("Helvetica", 10)
+    p.drawString(180, height - 140, f"{assignment.question_paper_subject.subject_name}")
+
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 160, "Course Code: ")
+    p.setFont("Helvetica", 10)
+    p.drawString(180, height - 160, f"{assignment.question_paper_subject.subject_code}")
+
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 180, "Semester: ")
+    p.setFont("Helvetica", 10)
+    p.drawString(180, height - 180, f"{assignment.question_paper_subject.semester}")
+
+
+    right_y = height - 140  # Starting Y position for the first item
+    label_x = width - 120    # X position for the labels
+    value_x = width - 50     # X position for the values (farther right for better spacing)
+
+    if assignment.question_paper_type != 'Assignment':
+        # Date
+        p.setFont("Helvetica-Bold", 10)
+        p.drawRightString(label_x, right_y, "Date: ")
+        p.setFont("Helvetica", 10)
+        p.drawRightString(value_x, right_y, f"{assignment.exam_date}")
+        right_y -= 20  # Move Y position down by 20 units
+
+        # Time
+        p.setFont("Helvetica-Bold", 10)
+        p.drawRightString(label_x, right_y, "Time: ")
+        p.setFont("Helvetica", 10)
+        time_text = f'{assignment.exam_hour} Hour' if assignment.exam_minute is None else f'{assignment.exam_hour} Hour {assignment.exam_minute} Min.'
+        p.drawRightString(value_x, right_y, time_text)
+        right_y -= 20  # Move Y position down by 20 units
+
+    # Marks (regardless of assignment type, marks are displayed)
+    p.setFont("Helvetica-Bold", 10)
+    p.drawRightString(label_x, right_y, "Marks: ")
+    p.setFont("Helvetica", 10)
+    p.drawRightString(value_x, right_y, f"{assignment.question_paper_total_marks}")
+
+
+
+    # Draw a line separator
+    p.setLineWidth(1)
+    p.line(50, height - 200, width - 50, height - 200)
+
+    # Iterate through the divisions and questions
+    current_y = height - 220
+    for division in assignment.divisions.all():
+        # Division title and marks
+        p.setFont("Helvetica-Bold", 10)
+        p.drawString(100, current_y, f"Q({division.division_no}). {division.division_title}")
+        p.setFont("Helvetica", 10)
+        p.drawRightString(width - 100, current_y, f"(Marks: {division.division_mark})")
+        current_y -= 20
+
+        # List the questions under the division
+        for question in division.division_questions.all():
+            p.setFont("Helvetica", 10)
+            p.drawString(120, current_y, f"{question.question_title}")
+            current_y -= 20
+
+        current_y -= 10  # Add a little more space between divisions
+
+    # Finish the PDF
+    p.showPage()
+    p.save()
+
+    return response

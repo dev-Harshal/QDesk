@@ -1,0 +1,97 @@
+{% extends "users/base_site.html" %}
+{% block title %} Assignment {% endblock title %}
+
+{% block main %}
+
+    <a href="{% url "assignment_pdf" assignment.id %}" class="btn btn-primary btn-sm mt-3">Download</a>
+
+
+    <section class="section mt-4">
+        <div class="row">
+
+            <div class="col-12">
+
+                <div class="card border border-dark">
+
+                    <div class="card-body">
+
+                        <p class="card-text text-center mb-0 pb-0 pt-2">{{institute}}</p>
+                        <p class="card-text text-center mb-0 pb-0">Department of {{assignment.question_paper_subject.department}}</p>
+                        <h5 class="card-title text-center text-dark pt-2">{{assignment.question_paper_title}} <span class="fw-normal fs-6 text-dark">(Academic Year {{assignment.academic_year_start}} - {{assignment.academic_year_end}})</span></h5>
+
+                        <div class="row">
+
+                            <div class="col-6 fw-bold">
+                                
+                                <div class="row">
+                                    <p class="col-3 card-text mb-0 pb-0 d-flex justify-content-between">
+                                        Course Title
+                                        <span>:</span>
+                                    </p>
+                                    <p class="col-9 card-text mb-0 pb-0 ps-2">{{assignment.question_paper_subject.subject_name}}</p>
+                                </div>
+
+                                <div class="row">
+                                    <p class="col-3 card-text mb-0 pb-0 d-flex justify-content-between">
+                                        Course Code
+                                        <span>:</span>
+                                    </p>
+                                    <p class="col-9 card-text mb-0 pb-0 ps-2">{{assignment.question_paper_subject.subject_code}}</p>
+                                </div>
+
+                                <div class="row">
+                                    <p class="col-3 card-text mb-0 pb-0 d-flex justify-content-between">
+                                        Semester
+                                        <span>:</span>
+                                    </p>
+                                    <p class="col-9 card-text mb-0 pb-0 ps-2">{{assignment.question_paper_subject.semester}}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-6 fw-bold">
+
+                                <div class="row justify-content-end">
+                                    <p class="col-2 card-text mb-0 pb-0 d-flex justify-content-between">
+                                        Marks
+                                        <span>:</span>
+                                    </p>
+                                    <p class="col-auto card-text mb-0 pb-0 ps-2">{{assignment.question_paper_total_marks}}</p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        {% for division in assignment.divisions.all %}
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-10 border pt-2 pb-4">
+                                
+                                <h5 class="card-title text-dark pb-2 d-flex justify-content-between">
+                                    Q({{division.division_no}}). {{division.division_title}}
+                                    <span class="text-dark fs-6">(Marks :{{division.division_mark}})</span>
+                                </h5>
+                                
+                                
+                                {% for question in division.division_questions.all %}
+                                    <p class="card-text mb-0 pb-0 pt-2">{{forloop.counter}}. {{question.question_title}}</p>
+                                {% endfor %}
+                                
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+{% endblock main %}

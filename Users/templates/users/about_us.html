@@ -1,0 +1,58 @@
+{% extends "users/base_site.html" %}
+{% load static %}
+
+{% block title %} About Us {% endblock title %}
+
+{% block main %}
+
+<div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+    <div class="col-lg-9 px-0">
+        <h1 class="display-4 fst-italic">"Understanding Bloom’s Taxonomy: Transform Your Teaching."</h1>
+        <p class="lead my-3">"Explore the cognitive levels that foster deeper learning."</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <div class="row featurette mt-3 pt-4">
+                <div class="col-md-7">
+                    <h2 class="featurette-heading fw-normal lh-1">What is Bloom’s Taxonomy ?</h2>
+                    <p class="lead">Bloom's Taxonomy is a framework used to categorize educational goals into different levels of complexity.<br>It was created by Benjamin Bloom in 1956, and the revised version in 2001 by Anderson and Krathwohl uses different terminology and a more dynamic structure. Here’s a breakdown of the revised version:<br>
+                        <br>
+                        Like other taxonomies, Bloom’s is hierarchical, meaning that learning at the higher levels is dependent on having attained prerequisite knowledge and skills at lower levels.
+                    </p>
+                </div>
+                <div class="col-md-5">
+                    <img src="{% static "users/img/blooms.jpg" %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title fs-4">Question Papers</h5>
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <ol class="list-group list-group-numbered">
+                        {% for subject in subjects_with_question_papers %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                    <div class="fw-bold">{{subject.subject_code}} - {{subject.name}}</div>
+                                    {{subject.department}} - {{subject.scheme}} Scheme
+                            </div>
+                          <span class="badge text-bg-primary rounded-pill">view</span>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock main %}

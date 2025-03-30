@@ -7,6 +7,11 @@ urlpatterns = [
     path('login/', login_view, name='login-view'),
     path('logout/', logout_view, name='logout-view'),
 
+    path('about-us/', about_us_view, name='about-us-view'),
+    path('question-sets/<int:subject_id>/', question_sets_view, name='question-sets-view'),
+    path('assignments/<int:subject_id>/', assignments_view, name='assignments-view'),
+    path('assignment/<int:assignment_id>/', assignment_view, name='assignment-view'),
+
     path('<str:role>/login/', members_login_view, name='members-login-view'),
     path('members/update/profile/', members_update_profile_view, name='members-update-profile-view'),
     path('members/change-password/', members_change_password_view, name='members-change-password-view'),
@@ -34,4 +39,5 @@ urlpatterns = [
     path('teacher/', teacher_index_view, name='teacher-index-view'),
     path('teacher/profile/', teacher_profile_view, name='teacher-profile-view'),
     path('teacher/list/students/', teacher_list_students_view, name='teacher-list-students-view'),
+    path('assignment/<int:pk>/pdf/', assignment_pdf_view, name='assignment_pdf'),
 ]

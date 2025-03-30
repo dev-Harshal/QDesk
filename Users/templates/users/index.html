@@ -1,3 +1,155 @@
 {% extends "users/base_site.html" %}
+{% load static %}
 
-{% block main %}{% endblock main %}
+{% block main %}
+
+{% if not request.user.is_authenticated %}
+
+    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div class="col-lg-9 px-0">
+            <h1 class="display-4 fst-italic">"Understanding Bloom’s Taxonomy: Transform Your Teaching."</h1>
+            <p class="lead my-3">"Explore the cognitive levels that foster deeper learning."</p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <div class="row featurette mt-3 pt-4">
+                    <div class="col-md-7">
+                        <h2 class="featurette-heading fw-normal lh-1">What is Bloom’s Taxonomy ?</h2>
+                        <p class="lead">Bloom's Taxonomy is a framework used to categorize educational goals into different levels of complexity.<br>It was created by Benjamin Bloom in 1956, and the revised version in 2001 by Anderson and Krathwohl uses different terminology and a more dynamic structure. Here’s a breakdown of the revised version:<br>
+                            <br>
+                            Like other taxonomies, Bloom’s is hierarchical, meaning that learning at the higher levels is dependent on having attained prerequisite knowledge and skills at lower levels.
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <img src="{% static "users/img/blooms.jpg" %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+    </section>
+
+    <div class="pagetitle">
+        <h1>Explore Question Sets</h1>
+    </div>
+
+    <section class="section">
+        <div class="row">
+        {% for subject in question_set_subjects %}
+            <div class="col-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between mb-2 pb-0">Subject Code: {{subject.subject_code}}
+                            <span class="text-dark">{{subject.semester}}</span>
+                        </h5>
+                        <p class="card-text">{{subject.subject_name}}</p>
+                        <p class="blockquote-footer">Scheme {{subject.scheme}}</p>
+
+                        <a href="{% url "login-view" %}" class="btn btn-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </section>
+
+    <div class="pagetitle">
+        <h1>Explore Question Papers</h1>
+    </div>
+
+    <section class="section">
+        <div class="row">
+        {% for subject in question_paper_subjects %}
+            <div class="col-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between mb-2 pb-0">Subject Code: {{subject.subject_code}}
+                            <span class="text-dark">{{subject.semester}}</span>
+                        </h5>
+                        <p class="card-text">{{subject.subject_name}}</p>
+                        <p class="blockquote-footer">Scheme {{subject.scheme}}</p>
+
+                        <a href="{% url "login-view" %}" class="btn btn-primary">Explore</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </section>
+{% else %}
+
+    <div class="pagetitle mt-4">
+        <h1>Explore Question Sets and Papers</h1>
+    </div>
+
+    <form method="GET" class="mb-3">
+        <div class="row g-3">
+            <div class="col-4">
+                <label for="department" class="form-label">Department</label>
+                <select id="department" class="form-select" name="department" required>
+                    <option value="">Sort department</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Computer Engineering">Computer Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                </select>
+            </div>
+
+            <div class="col-4">
+                <label for="scheme" class="form-label">Scheme</label>
+                <select id="scheme" class="form-select" name="scheme">
+                    <option value="">Sort scheme</option>
+                    <option value="K">K</option>
+                    <option value="I">I</option>
+                </select>
+            </div>
+
+            <div class="col-4">
+                <label for="semester" class="form-label">Semester</label>
+                <select id="semester" class="form-select" name="semester">
+                    <option value="">Sort semester</option>
+                    <option value="Semester 1">Semester 1</option>
+                    <option value="Semester 2">Semester 2</option>
+                    <option value="Semester 3">Semester 3</option>
+                    <option value="Semester 4">Semester 4</option>
+                    <option value="Semester 5">Semester 5</option>
+                    <option value="Semester 6">Semester 6</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    {% for subject in subjects %}
+        <div class="col-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title d-flex justify-content-between mb-2 pb-0">Subject Code: {{subject.subject_code}}
+                        <span class="text-dark">{{subject.semester}}</span>
+                    </h5>
+                    <p class="card-text">{{subject.subject_name}}</p>
+                    <p class="blockquote-footer">Scheme {{subject.scheme}}</p>
+
+                    <a href="{% url "question-sets-view" subject.id %}" class="btn btn-primary">Explore</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+</div>
+
+
+
+
+{% endif %}
+
+
+
+{% endblock main %}
