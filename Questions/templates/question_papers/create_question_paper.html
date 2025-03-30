@@ -72,9 +72,9 @@
                                 <div class="col-12">
                                     <label for="academicYear" class="form-label">Academic Year</label>
                                     <div class="d-flex justify-content-between align-items-center gap-2">
-                                        <input type="number" class="form-control text-center" name="academic_year_start" min="2024" placeholder="Start Year" required>
+                                        <input type="number" class="form-control text-center" id="academicYearStart" name="academic_year_start" min="2024" placeholder="Start Year" required>
                                         <span class="fw-bold"> - </span>
-                                        <input type="number" class="form-control text-center" name="academic_year_end" min="2025" placeholder="End Year" required>
+                                        <input type="number" class="form-control text-center" id="academicYearEnd" name="academic_year_end" min="2025" placeholder="End Year" required>
                                     </div>
                                 </div>
             
@@ -115,6 +115,24 @@
 
         </section>
 
+        <script>
+            const examDateInput = document.getElementById('examDate');
+            const today = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+            examDateInput.setAttribute('min', today); // Set the minimum selectable date
+        </script>
+        
+        <script>
+            const currentYear = new Date().getFullYear(); // Get current year
+            const nextYear = currentYear + 1; // Calculate next year
+        
+            document.getElementById('academicYearStart').addEventListener('click', function() {
+                this.value = currentYear; // Set current year in start year input
+            });
+        
+            document.getElementById('academicYearEnd').addEventListener('click', function() {
+                this.value = nextYear; // Set next year in end year input
+            });
+        </script>
 
     </main>
 

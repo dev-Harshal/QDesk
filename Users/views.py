@@ -226,6 +226,7 @@ def members_delete_user_view(request, user_id):
         return redirect(f'{request.user.role.lower()}-index-view')
 
 
+
 def admin_index_view(request):
     total_users = User.objects.all().count()
     admins = User.objects.filter(role='Admin').all().count()
@@ -555,7 +556,7 @@ def hod_list_users_view(request, role):
 
 
 def teacher_index_view(request):
-    subjects = Subject.objects.filter(question_sets__in=QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all())).count()
+    subjects = request.user.profile.subjects.all().count()
     question_sets = QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all()).all().count()
     questions = Question.objects.filter(question_sets__in=QuestionSet.objects.filter(subject__in=request.user.profile.subjects.all())).all().count()
 
@@ -565,7 +566,7 @@ def teacher_index_view(request):
     question_papers_pending = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), status="Incomplete").all().count()
 
     assignment_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), question_paper_type="Assignment").all().count()
-    unit_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), question_paper_type="Unit").all().count()
+    unit_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), question_paper_type="Unit Test").all().count()
     exam_papers = QuestionPaper.objects.filter(question_paper_subject__in=request.user.profile.subjects.all(), question_paper_type="Exam").all().count()
 
 
