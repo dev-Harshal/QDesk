@@ -1,3 +1,5 @@
+import string
+import textwrap
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
@@ -15,46 +17,45 @@ from urllib.parse import unquote
 from django.db.models import Q  # To help with complex queries
 
 def index_view(request):
-    # Get the filter values from the GET request
-    department = request.GET.get('department', '')
-    scheme = request.GET.get('scheme', '')
-    semester = request.GET.get('semester', '')
+    department = request.GET.get('department', '').strip()
+    scheme = request.GET.get('scheme', '').strip()
+    semester = request.GET.get('semester', '').strip()
 
-    # Debugging: Check the data being received
-    print(f"GET data: {request.GET}")
+    query_filters = False
 
-    # Start with all subjects
-    subjects = Subject.objects.all()
 
-    # Apply filters if present
     if department:
-        department = unquote(department).strip()  # Decode and remove extra spaces
-        print(f"Filtering by department: {department}")  # Debug
-        subjects = Subject.objects.filter(department__iexact=department).all()  # Case-insensitive match
-
+        query_filters = True
+        filtered_subjects = Subject.objects.filter(department=department)
     if scheme:
-        print(f"Filtering by scheme: {scheme}")  # Debug
-        subjects = Subject.objects.filter(scheme__iexact=scheme).all()
-
+        query_filters = True
+        filtered_subjects = filtered_subjects.filter(scheme=scheme)    
     if semester:
-        semester = unquote(semester).strip()
-        print(f"Filtering by semester: {semester}")  # Debug
-        subjects = Subject.objects.filter(semester__iexact=semester).all()
+        query_filters = True
+        filtered_subjects = filtered_subjects.filter(semester=semester)
 
-    # Debugging: See what subjects are being retrieved
-    print(f"Filtered subjects: {subjects}")
 
-    # The rest of your logic remains the same
-    question_set_subjects = Subject.objects.filter(question_sets__in=QuestionSet.objects.all()).distinct()
-    question_paper_subjects = Subject.objects.filter(question_papers__in=QuestionPaper.objects.all().reverse()).distinct()
+    if not query_filters:
+        all_subjects = Subject.objects.all()
+    else:
+        all_subjects = filtered_subjects.all()
+
+        
+    question_set_subjects = Subject.objects.filter(
+        question_sets__in=QuestionSet.objects.all()
+    ).distinct()
+
+    question_paper_subjects = Subject.objects.filter(
+        question_papers__in=QuestionPaper.objects.all()
+    ).distinct()
 
     context = {
         'question_set_subjects': question_set_subjects[:3],
         'question_paper_subjects': question_paper_subjects[:3],
-        'subjects': subjects
+        'subjects': all_subjects,
     }
 
-    return render(request, 'users/index.html', context=context)
+    return render(request, 'users/index.html', context)
 
 def question_sets_view(request, subject_id):
     subject = Subject.objects.prefetch_related(
@@ -229,13 +230,11 @@ def members_delete_user_view(request, user_id):
 
 def admin_index_view(request):
     total_users = User.objects.all().count()
-    admins = User.objects.filter(role='Admin').all().count()
     hods = User.objects.filter(role='HOD').all().count()
     teachers = User.objects.filter(role='Teacher').all().count()
     students = User.objects.filter(role='Student').all().count()
     context = {
         'total_users':total_users,
-        'admins':admins,
         'hods':hods,
         'teachers':teachers,
         'students':students,
@@ -350,11 +349,14 @@ def hod_index_view(request):
     total_teachers = Profile.objects.filter(user__role = 'Teacher', department=request.user.profile.department).all().count()
     total_subjects = Subject.objects.filter(department=request.user.profile.department).all().count()
     recent_subjects = Subject.objects.filter(department=request.user.profile.department).all().reverse()
-
+    teachers = User.objects.filter(role='Teacher').all().count()
+    students = User.objects.filter(role='Student').all().count()
     context = {
         'total_teachers':total_teachers,
         'total_subjects':total_subjects,
         'recent_subjects':recent_subjects[:5],
+        'teachers':teachers,
+        'students':students,
     }
     return render(request, 'members/hod/index.html', context=context)
 
@@ -593,23 +595,24 @@ def teacher_list_students_view(request):
     return render(request, 'members/teacher/list_students.html', context={'users':users})
 
 def assignment_pdf_view(request, pk):
+    # Get the assignment object (example data fetching, replace as needed)
+    assignment = QuestionPaper.objects.get(id=pk)
+    
     # Create a response object
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="assignment.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="{assignment.question_paper_title}.pdf"'
 
     # Create a PDF object using reportlab
     p = canvas.Canvas(response, pagesize=letter)
     width, height = letter
 
-    # Get the assignment object (example data fetching, replace as needed)
-    assignment = QuestionPaper.objects.get(id=pk)
     
     # Set fonts and styles
-    p.setFont("Helvetica-Bold", 12)
+    p.setFont("Helvetica-Bold", 10)
 
     # Add the institute name and other details (center aligned)
     p.drawCentredString(width / 2, height - 50, f"{Profile.objects.filter(subjects=assignment.question_paper_subject).first().user.institute}")
-    p.setFont("Helvetica", 10)
+    p.setFont("Helvetica", 12)
     p.drawCentredString(width / 2, height - 70, f"Department of {assignment.question_paper_subject.department}")
     p.setFont("Helvetica-Bold", 12)
     p.drawCentredString(width / 2, height - 90, f"{assignment.question_paper_title}")
@@ -630,7 +633,7 @@ def assignment_pdf_view(request, pk):
     p.setFont("Helvetica-Bold", 10)
     p.drawString(100, height - 180, "Semester: ")
     p.setFont("Helvetica", 10)
-    p.drawString(180, height - 180, f"{assignment.question_paper_subject.semester}")
+    p.drawString(180, height - 180, f"CO{assignment.question_paper_subject.semester[-1]}i")
 
 
     right_y = height - 140  # Starting Y position for the first item
@@ -642,7 +645,8 @@ def assignment_pdf_view(request, pk):
         p.setFont("Helvetica-Bold", 10)
         p.drawRightString(label_x, right_y, "Date: ")
         p.setFont("Helvetica", 10)
-        p.drawRightString(value_x, right_y, f"{assignment.exam_date}")
+        formatted_date = assignment.exam_date.strftime("%d/%m/%y")
+        p.drawRightString(value_x, right_y, f"{formatted_date}")
         right_y -= 20  # Move Y position down by 20 units
 
         # Time
@@ -676,10 +680,20 @@ def assignment_pdf_view(request, pk):
         current_y -= 20
 
         # List the questions under the division
-        for question in division.division_questions.all():
+        max_width = 400  # Max width in points that text should occupy
+        line_height = 14  # Space between wrapped lines
+
+        for i, question in enumerate(division.division_questions.all()):
+            char = string.ascii_lowercase[i]
+            question_text = f"{char}. {question.question_title}"
+
+            # Wrap text to fit in max_width
+            wrapped_lines = textwrap.wrap(question_text, width=90)  # Adjust width based on font size & page width
+
             p.setFont("Helvetica", 10)
-            p.drawString(120, current_y, f"{question.question_title}")
-            current_y -= 20
+            for line in wrapped_lines:
+                p.drawString(120, current_y, line)
+                current_y -= line_height
 
         current_y -= 10  # Add a little more space between divisions
 

@@ -1,17 +1,17 @@
 {% extends "members/hod/base_site.html" %}
 
-{% block title %} Create Teacher {% endblock title %}
+{% block title %} Add Teacher {% endblock title %}
 
 {% block main %}
 
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Create Teacher</h1>
+            <h1>Add Teacher</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url "hod-index-view" %}">Home</a></li>
-                    <li class="breadcrumb-item active">Create Teacher</li>
+                    <li class="breadcrumb-item active">Add Teacher</li>
                 </ol>
             </nav>
         </div>
@@ -22,7 +22,7 @@
                     <div class="card border border-dark shadow">
 
                         <div class="card-header text-center bg-primary text-light fw-bold fs-5">
-                            Create {{request.user.profile.department}} Teacher Profile
+                            Add {{request.user.profile.department}} Teacher Profile
                         </div>
 
                         <div class="card-body pt-4">

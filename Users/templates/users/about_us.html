@@ -35,20 +35,16 @@
 <section class="section">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title fs-4">Question Papers</h5>
-            <div class="row justify-content-center">
-                <div class="col-6">
-                    <ol class="list-group list-group-numbered">
-                        {% for subject in subjects_with_question_papers %}
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                    <div class="fw-bold">{{subject.subject_code}} - {{subject.name}}</div>
-                                    {{subject.department}} - {{subject.scheme}} Scheme
-                            </div>
-                          <span class="badge text-bg-primary rounded-pill">view</span>
-                        </li>
-                        {% endfor %}
-                    </ol>
+            <div class="row featurette mt-3 pt-4">
+                <div class="col-md-5">
+                     <img src="{% static "users/img/blooms2.jpg" %}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                </div>
+                <div class="col-md-7">
+                    <h2 class="featurette-heading fw-normal lh-1">How Bloom’s works with learning outcomes</h2>
+                    <p class="lead">Fortunately, there are “verb tables” to help identify which action verbs align with each level in Bloom’s Taxonomy.<br>
+                        <br>
+                        You may notice that some of these verbs on the table are associated with multiple Bloom’s Taxonomy levels. These “multilevel-verbs” are actions that could apply to different activities. For example, you could have an outcome that states “At the end of this lesson, students will be able to explain the difference between H2O and OH-.” This would be an understanding level outcome.
+                    </p>
                 </div>
             </div>
         </div>

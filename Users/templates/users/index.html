@@ -89,9 +89,9 @@
         <div class="row g-3">
             <div class="col-4">
                 <label for="department" class="form-label">Department</label>
-                <select id="department" class="form-select" name="department" required>
+                <select id="department" class="form-select" name="department" >
                     <option value="">Sort department</option>
-                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Mechanical Enginnering">Mechanical Enginnering</option>
                     <option value="Computer Engineering">Computer Engineering</option>
                     <option value="Civil Engineering">Civil Engineering</option>
                 </select>
@@ -126,30 +126,26 @@
         </div>
     </form>
 
-    {% for subject in subjects %}
-        <div class="col-4">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h5 class="card-title d-flex justify-content-between mb-2 pb-0">Subject Code: {{subject.subject_code}}
-                        <span class="text-dark">{{subject.semester}}</span>
-                    </h5>
-                    <p class="card-text">{{subject.subject_name}}</p>
-                    <p class="blockquote-footer">Scheme {{subject.scheme}}</p>
+    <div class="row">
+        {% for subject in subjects %}
+            <div class="col-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex justify-content-between mb-2 pb-0">Subject Code: {{subject.subject_code}}
+                            <span class="text-dark">{{subject.semester}}</span>
+                        </h5>
+                        <p class="card-text">{{subject.subject_name}}</p>
+                        <p class="blockquote-footer">Scheme {{subject.scheme}}</p>
 
-                    <a href="{% url "question-sets-view" subject.id %}" class="btn btn-primary">Explore</a>
+                        <a href="{% url "question-sets-view" subject.id %}" class="btn btn-primary">Explore</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 
 
 </div>
-
-
-
-
 {% endif %}
-
-
 
 {% endblock main %}

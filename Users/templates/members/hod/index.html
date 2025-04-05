@@ -56,6 +56,64 @@
                             <div class="card">
                     
                                 <div class="card-body pb-0">
+                                    <h5 class="card-title">Different Users</h5>
+                        
+                                    <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+                        
+                                    <script>
+                                            document.addEventListener("DOMContentLoaded", () => {
+                                                
+                                                echarts.init(document.querySelector("#trafficChart")).setOption({
+                                                    tooltip: {
+                                                        trigger: 'item'
+                                                    },
+        
+                                                    legend: {
+                                                        top: '5%',
+                                                        left: 'center'
+                                                    },
+                                                    series: [{
+                                                        name: 'Count',
+                                                        type: 'pie',
+                                                        radius: ['40%', '70%'],
+                                                        avoidLabelOverlap: false,
+                                                    label: {
+                                                        show: false,
+                                                        position: 'center'
+                                                    },
+                                                    emphasis: {
+                                                        label: {
+                                                        show: true,
+                                                        fontSize: '18',
+                                                        fontWeight: 'bold'
+                                                        }
+                                                    },
+                                                    labelLine: {
+                                                        show: false
+                                                    },
+                                                    data: [
+                                                        {
+                                                        value: {{ teachers }},
+                                                        name: 'Teacher'
+                                                        },
+                                                        {
+                                                        value: {{ students }},
+                                                        name: 'Student'
+                                                        }
+                                                    ]
+                                                    }]
+                                                });
+                                            });
+                                    </script>
+                                </div>
+        
+                            </div>
+                        </div> 
+
+                        <div class="col-12">
+                            <div class="card">
+                    
+                                <div class="card-body pb-0">
                                     <h5 class="card-title">Recently added subjects</h5>
 
                                     <table class="table datatable">
