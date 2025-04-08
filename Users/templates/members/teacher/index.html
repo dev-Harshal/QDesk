@@ -78,10 +78,10 @@
         <section class="section dashboard">
 
             <div class="row">
-                <div class="col-8">
+                <div class="col-12">
                     <div class="row flex-wrap">
 
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="card info-card sales-card">      
                                 <div class="card-body">
         
@@ -99,7 +99,7 @@
                             </div>
                         </div> 
                         
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="card info-card revenue-card">      
                                 <div class="card-body">
         
@@ -117,7 +117,7 @@
                             </div>
                         </div>
         
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="card info-card customers-card">      
                                 <div class="card-body">
         
@@ -134,92 +134,77 @@
                                 </div>
                             </div>
                         </div> 
+
                         
-                        <div class="col-6">
-                            <div class="card info-card revenue-card">      
-                                <div class="card-body">
-        
-                                    <h5 class="card-title">Total Question Papers</h5>
-        
-                                    <div class="d-flex align-items-center">
-                                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-journals"></i>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                            
+                                        <div class="card-body pb-0">
+                                            <h5 class="card-title">Question Papers</h5>
+                                
+                                            <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+                                
+                                            <script>
+                                                    document.addEventListener("DOMContentLoaded", () => {
+                                                        
+                                                        echarts.init(document.querySelector("#trafficChart")).setOption({
+                                                            tooltip: {
+                                                                trigger: 'item'
+                                                            },
+                
+                                                            legend: {
+                                                                top: '5%',
+                                                                left: 'center'
+                                                            },
+                                                            series: [{
+                                                                name: 'Count',
+                                                                type: 'pie',
+                                                                radius: ['40%', '70%'],
+                                                                avoidLabelOverlap: false,
+                                                            label: {
+                                                                show: false,
+                                                                position: 'center'
+                                                            },
+                                                            emphasis: {
+                                                                label: {
+                                                                show: true,
+                                                                fontSize: '18',
+                                                                fontWeight: 'bold'
+                                                                }
+                                                            },
+                                                            labelLine: {
+                                                                show: false
+                                                            },
+                                                            data: [{
+                                                                value: {{ assignment_papers }},
+                                                                name: 'Assignments'
+                                                                },
+                                                                {
+                                                                value: {{ unit_papers }},
+                                                                name: 'Unit Papers'
+                                                                },
+                                                                {
+                                                                value: {{ exam_papers }},
+                                                                name: 'Exam Papers'
+                                                                }
+                                                            ]
+                                                            }]
+                                                        });
+                                                    });
+                                            </script>
                                         </div>
-                                        <div class="ps-3">
-                                            <h6>{{total_question_papers}}</h6>
-                                        </div>
+                
                                     </div>
-                                </div>
+                                </div> 
                             </div>
                         </div>
+                        
                         
                     </div>
                 </div>
 
-                <div class="col-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                    
-                                <div class="card-body pb-0">
-                                    <h5 class="card-title">Question Papers</h5>
-                        
-                                    <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-                        
-                                    <script>
-                                            document.addEventListener("DOMContentLoaded", () => {
-                                                
-                                                echarts.init(document.querySelector("#trafficChart")).setOption({
-                                                    tooltip: {
-                                                        trigger: 'item'
-                                                    },
-        
-                                                    legend: {
-                                                        top: '5%',
-                                                        left: 'center'
-                                                    },
-                                                    series: [{
-                                                        name: 'Count',
-                                                        type: 'pie',
-                                                        radius: ['40%', '70%'],
-                                                        avoidLabelOverlap: false,
-                                                    label: {
-                                                        show: false,
-                                                        position: 'center'
-                                                    },
-                                                    emphasis: {
-                                                        label: {
-                                                        show: true,
-                                                        fontSize: '18',
-                                                        fontWeight: 'bold'
-                                                        }
-                                                    },
-                                                    labelLine: {
-                                                        show: false
-                                                    },
-                                                    data: [{
-                                                        value: {{ assignment_papers }},
-                                                        name: 'Assignments'
-                                                        },
-                                                        {
-                                                        value: {{ unit_papers }},
-                                                        name: 'Unit Papers'
-                                                        },
-                                                        {
-                                                        value: {{ exam_papers }},
-                                                        name: 'Exam Papers'
-                                                        }
-                                                    ]
-                                                    }]
-                                                });
-                                            });
-                                    </script>
-                                </div>
-        
-                            </div>
-                        </div> 
-                    </div>
-                </div>
             </div>
 
         </section>

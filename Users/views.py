@@ -633,7 +633,7 @@ def assignment_pdf_view(request, pk):
     p.setFont("Helvetica-Bold", 10)
     p.drawString(100, height - 180, "Semester: ")
     p.setFont("Helvetica", 10)
-    p.drawString(180, height - 180, f"CO{assignment.question_paper_subject.semester[-1]}i")
+    p.drawString(180, height - 180, f"CO{assignment.question_paper_subject.semester[-1]}{assignment.question_paper_subject.scheme.lower()}")
 
 
     right_y = height - 140  # Starting Y position for the first item
