@@ -4,3 +4,11 @@
     background-repeat: no-repeat;
     background-position: center;
   }
+
+
+  .index-bg {
+    background-image: url('../img/index_bg.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }

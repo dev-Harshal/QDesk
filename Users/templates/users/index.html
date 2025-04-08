@@ -1,14 +1,16 @@
 {% extends "users/base_site.html" %}
 {% load static %}
 
+{% block title %} Questions Desk {% endblock title %} Questions Desk 
+
 {% block main %}
 
 {% if not request.user.is_authenticated %}
 
-    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis index-bg">
         <div class="col-lg-9 px-0">
-            <h1 class="display-4 fst-italic">"Understanding Bloom’s Taxonomy: Transform Your Teaching."</h1>
-            <p class="lead my-3">"Explore the cognitive levels that foster deeper learning."</p>
+            <h1 class="display-4 fst-italic fw-semibold">"Empowering Teachers, Engaging Students"</h1>
+            <p class="lead my-3 fw-semibold">"A seamless platform for creating and accessing question papers and assignments."</p>
         </div>
     </div>
 
